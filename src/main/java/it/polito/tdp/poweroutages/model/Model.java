@@ -19,7 +19,6 @@ public class Model {
 	public Model() {
 		podao = new PowerOutageDAO();
 		partenza = new ArrayList<PowerOutages>();
-		
 		totCustomersOttimo = 0;
 	}
 	
@@ -29,7 +28,7 @@ public class Model {
 
 	public List<PowerOutages> calcolaSottoinsiemeNerc(Nerc nerc, int maxAnni, int maxOre){
 		List<PowerOutages> parziale = new ArrayList<PowerOutages>();
-		soluzioneMigliore = new ArrayList<PowerOutages>();
+		soluzioneMigliore = null;
 		partenza.addAll(this.podao.getPowerOutagesList(nerc));
 		annoMinore = partenza.get(0).getDateEventFinished().getYear();
 		annoMaggiore = partenza.get(partenza.size()-1).getDateEventFinished().getYear();
@@ -41,9 +40,9 @@ public class Model {
 		
 		int customers = this.sommaCustomers(parziale);
 		
-		if(customers > totCustomersOttimo) {
+		if(soluzioneMigliore == null || customers > totCustomersOttimo) {
 			totCustomersOttimo = customers;
-			soluzioneMigliore = parziale;
+			soluzioneMigliore = new ArrayList<>(parziale);
 		}
 		
 		if(livello == partenza.size())
